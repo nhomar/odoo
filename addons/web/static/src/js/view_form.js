@@ -1058,7 +1058,7 @@ openerp.web.form.Widget = openerp.web.OldWidget.extend(/** @lends openerp.web.fo
         if (! v_context) {
             v_context = (this.field || {}).context || {};
         }
-        
+
         if (v_context.__ref || true) { //TODO: remove true
             var fields_values = this._build_eval_context(blacklist);
             v_context = new openerp.web.CompoundContext(v_context).set_eval_context(fields_values);
@@ -1804,8 +1804,13 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
         this._super.apply(this, arguments);
         var $textarea = this.$element.find('textarea');
         $textarea.change(this.on_ui_change);
+        console.log($textarea);
+        $textarea.bind('input', this.triggered_elements);
         this.resized = false;
         this.setupFocus($textarea);
+    },
+    triggered_elements: function(){
+        console.log(this.value);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -2472,7 +2477,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.dataset.o2m = this;
         this.dataset.parent_view = this.view;
         this.dataset.child_name = this.name;
-        //this.dataset.child_name = 
+        //this.dataset.child_name =
         this.dataset.on_change.add_last(function() {
             self.trigger_on_change();
         });
@@ -2492,7 +2497,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     },
     load_views: function() {
         var self = this;
-        
+
         var modes = this.node.attrs.mode;
         modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
@@ -2939,7 +2944,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this.dataset.on_unlink.add_last(function(ids) {
             self.on_ui_change();
         });
-        
+
         this.is_setted.then(function() {
             self.load_view();
         });
